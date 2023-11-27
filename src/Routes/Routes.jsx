@@ -7,6 +7,8 @@ import ContactUs from "../Pages/Home/ContactUs";
 import Dashboard from "../Pages/Home/Dashboard";
 import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 import BioDetails from "../Pages/Home/BioDetails";
+import SignIn from "../Pages/SignIn-Up/SignIn";
+import SignUp from "../Pages/SignIn-Up/SignUp";
 
 const router = createBrowserRouter([
   {
@@ -25,14 +27,6 @@ const router = createBrowserRouter([
       {
         path: "/details/:id",
         element: <BioDetails></BioDetails>,
-        // loader: async ({ params }) => {
-        //   const { _id } = params;
-        //   const response = await fetch(
-        //     `http://localhost:5000/bioData/${_id}`
-        //   );
-        //   const data = await response.json();
-        //   return data;
-        // },
       },
       {
         path: "/about",
@@ -46,6 +40,14 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <Dashboard></Dashboard>,
       },
+      {
+        path: "/signIn",
+        element: <SignIn></SignIn>
+      },
+      {
+        path: "/signUp",
+        element: <SignUp></SignUp>
+      }
     ],
   },
 ]);

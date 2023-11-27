@@ -1,15 +1,18 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Footer from "../Pages/Home/Shared/Footer";
 import NavBar from "../Pages/Home/Shared/Navbar";
 
 const Root = () => {
-    return (
+
+  const location = useLocation();
+  const noHeaderFooter = location.pathname.includes('signIn')
+  return (
       <div>
-        <NavBar></NavBar>
+        { noHeaderFooter || <NavBar></NavBar>}
         <div className="min-h-screen">
           <Outlet></Outlet>
         </div>
-        <Footer></Footer>
+       { noHeaderFooter || <Footer></Footer>}
       </div>
     );
 };

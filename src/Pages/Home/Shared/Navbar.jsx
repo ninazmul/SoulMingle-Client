@@ -74,7 +74,7 @@ const NavBar = () => {
             <Dropdown.Divider />
             <Dropdown.Item>
               <Button outline gradientDuoTone="purpleToPink" className="w-full">
-                Sign In
+                <Link to="/signIn">Sign In</Link>
               </Button>
             </Dropdown.Item>
           </Dropdown>
