@@ -66,18 +66,12 @@ const NavBar = () => {
           <Dropdown
             arrowIcon={false}
             inline
-            label={
-              <Avatar
-                alt="User settings"
-                img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                rounded
-              />
-            }
+            label={<img src={user.photoURL} className="rounded-full w-1/3" alt="User settings"/>}
           >
             <Dropdown.Header>
-              <span className="block text-sm">Bonnie Green</span>
+              <span className="block text-sm">{user.displayName}</span>
               <span className="block truncate text-sm font-medium">
-                name@flowbite.com
+                {user.email}
               </span>
             </Dropdown.Header>
             <Dropdown.Item>

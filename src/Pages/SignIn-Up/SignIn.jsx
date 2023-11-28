@@ -18,7 +18,7 @@ const SignIn = () => {
 
   const from = location.state?.form?.pathname || "/";
 
-    const { signIn } = useContext(AuthContext);
+    const { signIn, signInWithGoogle } = useContext(AuthContext);
 
     const handleSignIn = async (e) => {
       e.preventDefault();
@@ -41,6 +41,19 @@ const SignIn = () => {
       }
     };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      await signInWithGoogle();
+      Swal.fire({
+        icon: "success",
+        title: "Successful!",
+        text: "Sign out successfully!",
+      });
+      navigate(from, { replace: true });
+    } catch (error) {
+      console.error("Google Sign-In Error", error);
+    }
+  };
 
 
     const handleValidateCaptcha = () => {
@@ -118,6 +131,31 @@ const SignIn = () => {
               <Button disabled={disabled} type="submit" className="bg-pink-500">
                 <input type="submit" value="SignIn" />
               </Button>
+              <div className="text-center">
+                <p>Or</p>
+              </div>
+              <div>
+                <button
+                  onClick={handleGoogleSignIn}
+                  type="button"
+                  className="text-white w-full bg-pink-500 hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center justify-center"
+                >
+                  <svg
+                    className="w-4 h-4 me-2"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 18 19"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8.842 18.083a8.8 8.8 0 0 1-8.65-8.948 8.841 8.841 0 0 1 8.8-8.652h.153a8.464 8.464 0 0 1 5.7 2.257l-2.193 2.038A5.27 5.27 0 0 0 9.09 3.4a5.882 5.882 0 0 0-.2 11.76h.124a5.091 5.091 0 0 0 5.248-4.057L14.3 11H9V8h8.34c.066.543.095 1.09.088 1.636-.086 5.053-3.463 8.449-8.4 8.449l-.186-.002Z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Sign in with Google
+                </button>
+              </div>
             </form>
             {
               <p className="text-center p-2">

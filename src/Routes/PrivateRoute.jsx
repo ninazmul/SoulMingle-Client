@@ -9,7 +9,7 @@ const PrivateRoute = ({ children }) => {
 
     if (loading) {
         return (
-          <div role="status">
+          <div role="status" className="text-center py-40">
             <svg
               aria-hidden="true"
               className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-pink-600"
