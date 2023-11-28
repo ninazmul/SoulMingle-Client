@@ -9,6 +9,7 @@ import ErrorPage from "../Pages/ErrorPage/ErrorPage";
 import BioDetails from "../Pages/Home/BioDetails";
 import SignIn from "../Pages/SignIn-Up/SignIn";
 import SignUp from "../Pages/SignIn-Up/SignUp";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -26,7 +27,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/details/:id",
-        element: <BioDetails></BioDetails>,
+        element: (
+          <PrivateRoute>
+            <BioDetails></BioDetails>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/about",
@@ -34,20 +39,28 @@ const router = createBrowserRouter([
       },
       {
         path: "/contact",
-        element: <ContactUs></ContactUs>,
+        element: (
+          <PrivateRoute>
+            <ContactUs></ContactUs>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard",
-        element: <Dashboard></Dashboard>,
+        element: (
+          <PrivateRoute>
+            <Dashboard></Dashboard>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/signIn",
-        element: <SignIn></SignIn>
+        element: <SignIn></SignIn>,
       },
       {
         path: "/signUp",
-        element: <SignUp></SignUp>
-      }
+        element: <SignUp></SignUp>,
+      },
     ],
   },
 ]);

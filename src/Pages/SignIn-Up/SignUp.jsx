@@ -6,12 +6,18 @@ import {
   LoadCanvasTemplate,
   validateCaptcha,
 } from "react-simple-captcha";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { AuthContext } from "../../providers/AuthProvider";
+import Swal from "sweetalert2";
 
 const SignUp = () => {
-    const { createUser } = useContext(AuthContext);
+  const { createUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.form?.pathname || "/";
+
   const {
     register,
     handleSubmit,
@@ -28,6 +34,12 @@ const SignUp = () => {
       ).then((result) => {
         const loggedUser = result.user;
         console.log(loggedUser);
+        Swal.fire({
+          icon: "success",
+          title: "Successful!",
+          text: "Sign out successfully!",
+        });
+        navigate(from, { replace: true });
       });
   };
   console.log(watch("name"));
@@ -119,10 +131,22 @@ const SignUp = () => {
                 placeholder="Password"
                 required
               />
-              {errors.password && (
+              {errors.password?.type === "required" && (
+                <span className="text-red-500">Password is required</span>
+              )}
+              {errors.password?.type === "minLength" && (
                 <span className="text-red-500">
-                  Check the password, minimum 6 and maximum 21 characters, also
-                  A-a, and spacial characters are required
+                  Password must be 6 characters
+                </span>
+              )}
+              {errors.password?.type === "maxLength" && (
+                <span className="text-red-500">
+                  Password must be less then 21 characters
+                </span>
+              )}
+              {errors.password?.type === "pattern" && (
+                <span className="text-red-500">
+                  Password must have Uppercase, lowercase, one number and one special character
                 </span>
               )}
             </div>

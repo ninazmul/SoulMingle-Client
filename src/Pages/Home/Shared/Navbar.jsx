@@ -1,7 +1,23 @@
 import { Link } from "react-router-dom";
 import { Avatar, Dropdown, Navbar, Button } from "flowbite-react";
+import { useContext } from "react";
+import { AuthContext } from "../../../providers/AuthProvider";
+import Swal from "sweetalert2";
 
 const NavBar = () => {
+
+  const { user, singOUT } = useContext(AuthContext);
+
+  const handleSignOut = () => {
+    singOUT()
+      .then(() => { })
+      .catch(error => console.log(error))
+    Swal.fire({
+      icon: "success",
+      title: "Successful!",
+      text: "Sign out successfully!",
+    });
+  }
 
     const navBtn = (
       <>
@@ -73,9 +89,28 @@ const NavBar = () => {
             </Dropdown.Item>
             <Dropdown.Divider />
             <Dropdown.Item>
-              <Button outline gradientDuoTone="purpleToPink" className="w-full">
-                <Link to="/signIn">Sign In</Link>
-              </Button>
+              {user ? (
+                <>
+                  <Button
+                    outline
+                    gradientDuoTone="purpleToPink"
+                    className="w-full"
+                    onClick={handleSignOut}
+                  >
+                    <Link to="/signIn">Sign Out</Link>
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    outline
+                    gradientDuoTone="purpleToPink"
+                    className="w-full"
+                  >
+                    <Link to="/signIn">Sign In</Link>
+                  </Button>
+                </>
+              )}
             </Dropdown.Item>
           </Dropdown>
           <Navbar.Toggle />
