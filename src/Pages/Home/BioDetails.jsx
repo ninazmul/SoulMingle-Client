@@ -6,16 +6,18 @@ import { CiHeart } from "react-icons/ci";
 import useAuth from "../../Hooks/useAuth";
 import Swal from "sweetalert2";
 import useAxios from "../../Hooks/useAxios";
+import useFavBio from "../../Hooks/useFavBio";
 
 
 const BioDetails = () => {
   const { id } = useParams();
   const [bios, setBio] = useState(null);
-  const [loading, setLoading] = useState(true); // New state for loading
+  const [loading, setLoading] = useState(true); 
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const axiosSecure = useAxios();
+  const [, refetch] = useFavBio();
 
 
   const AddToFav = () => {
@@ -53,6 +55,8 @@ const BioDetails = () => {
               title: "Successful!",
               text: "Add to favourite Bio successfully!",
             });
+            refetch();
+            
           }
         })
         .catch((error) => {
@@ -128,15 +132,60 @@ const BioDetails = () => {
                 </div>
                 <div className="flex gap-10">
                   <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
-                    Occupation: {bios.Occupation}
+                    Gender:{" "}
+                    <span className="text-pink-700">{bios.BiodataType}</span>
                   </p>
                   <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
-                    Age: {bios.Age}
+                    Age: <span className="text-pink-700">{bios.Age}</span>
+                  </p>
+                  <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
+                    Race: <span className="text-pink-700">{bios.Race}</span>
                   </p>
                 </div>
-                <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
-                  Division: {bios.PermanentDivision}
-                </p>
+                <div className="flex gap-10">
+                  <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
+                    Height: <span className="text-pink-700">{bios.Height}</span>{" "}
+                    CM
+                  </p>
+                  <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
+                    Weight: <span className="text-pink-700">{bios.Weight}</span>{" "}
+                    KG
+                  </p>
+                </div>
+                <div className="flex gap-10">
+                  <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
+                    Occupation:{" "}
+                    <span className="text-pink-700">{bios.Occupation}</span>
+                  </p>
+                  <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
+                    DOB:{" "}
+                    <span className="text-pink-700">{bios.DateOfBirth}</span>
+                  </p>
+                </div>
+                <div className="">
+                  <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
+                    Fathers Name:{" "}
+                    <span className="text-pink-700">{bios.FathersName}</span>
+                  </p>
+                  <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
+                    Mothers Name:{" "}
+                    <span className="text-pink-700">{bios.MothersName}</span>
+                  </p>
+                </div>
+                <div className="">
+                  <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
+                    Present Address:{" "}
+                    <span className="text-pink-700">
+                      {bios.PresentDivision}
+                    </span>
+                  </p>
+                  <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
+                    Permanent Address:{" "}
+                    <span className="text-pink-700">
+                      {bios.PermanentDivision}
+                    </span>
+                  </p>
+                </div>
               </div>
             </div>
           </Card>
@@ -145,18 +194,36 @@ const BioDetails = () => {
               <Button onClick={AddToFav} className="bg-pink-500 rounded-lg m-2">
                 <CiHeart className="text-xl" />
               </Button>
-              <Button className="bg-pink-500 rounded-lg m-2">Messages</Button>
+              <Button className="bg-pink-500 rounded-lg m-2">CheckOut</Button>
               <Button className="bg-pink-500 rounded-lg m-2">Contact</Button>
             </Button.Group>
           </div>
         </div>
         <div className="text-center w-1/3">
           <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Gender:
+            Expectation:
           </h2>
-          <p className="text-xl md:text-2xl text-pink-700">
-            {bios.BiodataType}
-          </p>
+          <div className="">
+            <p className="text-xl md:text-2xl">
+              Age:{" "}
+              <span className="text-pink-700">{bios.ExpectedPartnerAge}</span>{" "}
+              Years
+            </p>
+            <p className="text-xl md:text-2xl">
+              Height:{" "}
+              <span className="text-pink-700">
+                {bios.ExpectedPartnerHeight}
+              </span>{" "}
+              CM
+            </p>
+            <p className="text-xl md:text-2xl">
+              Weight:{" "}
+              <span className="text-pink-700">
+                {bios.ExpectedPartnerWeight}
+              </span>{" "}
+              KG
+            </p>
+          </div>
         </div>
       </div>
     </section>

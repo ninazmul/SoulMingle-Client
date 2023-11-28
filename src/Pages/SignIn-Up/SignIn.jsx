@@ -9,12 +9,14 @@ import { AuthContext } from "../../providers/AuthProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import Swal from "sweetalert2";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
 const SignIn = () => {
     const capthcaRef = useRef(null);
   const [disabled, setDisabled] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const axiosPublic = useAxiosPublic();
 
   const from = location.state?.form?.pathname || "/";
 
@@ -48,13 +50,23 @@ const SignIn = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithGoogle();
-      Swal.fire({
-        icon: "success",
-        title: "Successful!",
-        text: "Sign out successfully!",
+      await signInWithGoogle().then((result) => {
+        const userInfo = {
+          name: result.user?.displayName,
+          email: result.user?.email,
+        };
+
+        axiosPublic.post("/user", userInfo).then((res) => {
+          if (res.data.insertedId) {
+            Swal.fire({
+              icon: "success",
+              title: "Successful!",
+              text: "Sign In successfully!",
+            });
+            navigate(from, { replace: true });
+          }
+        });
       });
-      navigate(from, { replace: true });
     } catch (error) {
       console.error("Google Sign-In Error", error);
     }

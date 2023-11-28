@@ -67,20 +67,20 @@ const NavBar = () => {
           </span>
         </Navbar.Brand>
         <div className="flex md:order-2 gap-4 items-center">
-          <button
-            type="button"
-            className="relative inline-flex items-center text-3xl font-medium text-center text-pink-500"
-          >
-            <Link to="/favBio">
-              <FaHeart />
-            </Link>
+          <Link to="/dashboard/favBio">
+            <button
+              type="button"
+              className="relative inline-flex items-center text-3xl font-medium text-center text-pink-500"
+            >
+                <FaHeart />
 
-            <span className="sr-only">Notifications</span>
-            <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
-              {favBio.length}
-            </div>
-          </button>
-
+              <span className="sr-only">Notifications</span>
+              <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
+                {favBio.length}
+              </div>
+            </button>
+          </Link>
+          
           <Dropdown
             arrowIcon={false}
             inline
@@ -115,24 +115,28 @@ const NavBar = () => {
             <Dropdown.Item>
               {user ? (
                 <>
-                  <Button
-                    outline
-                    gradientDuoTone="purpleToPink"
-                    className="w-full"
-                    onClick={handleSignOut}
-                  >
-                    <Link to="/signIn">Sign Out</Link>
-                  </Button>
+                  <Link to="/signIn" className="w-full">
+                    <Button
+                      outline
+                      gradientDuoTone="purpleToPink"
+                      className="w-full"
+                      onClick={handleSignOut}
+                    >
+                      Sign Out
+                    </Button>
+                  </Link>
                 </>
               ) : (
                 <>
-                  <Button
-                    outline
-                    gradientDuoTone="purpleToPink"
-                    className="w-full"
-                  >
-                    <Link to="/signIn">Sign In</Link>
-                  </Button>
+                  <Link to="/signIn">
+                    <Button
+                      outline
+                      gradientDuoTone="purpleToPink"
+                      className="w-full"
+                    >
+                      Sign In
+                    </Button>
+                  </Link>
                 </>
               )}
             </Dropdown.Item>

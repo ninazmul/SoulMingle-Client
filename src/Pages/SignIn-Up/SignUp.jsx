@@ -10,11 +10,17 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
+import useAxiosPublic from "../../Hooks/useAxiosPublic";
 
 const SignUp = () => {
+  const axiosPublic = useAxiosPublic();
   const { createUser, updateUserProfile } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const { signInWithGoogle } = useContext(AuthContext);
+  const capthcaRef = useRef(null);
+  const [disabled, setDisabled] = useState(true);
+
 
   const from = location.state?.form?.pathname || "/";
 
@@ -35,23 +41,31 @@ const SignUp = () => {
         console.log(loggedUser);
         updateUserProfile(data.displayName, data.photoURL)
           .then(() => {
-            console.log('user profile info updated')
-            reset();
-             Swal.fire({
-               icon: "success",
-               title: "Successful!",
-               text: "Sign out successfully!",
-             });
-             navigate(from, { replace: true });
+            
+            const userInfo = {
+              name: data.displayName,
+              email: data.email
+            };
+
+            axiosPublic.post('/user', userInfo)
+              .then(res => {
+                if (res.data.insertedId) {
+                reset();
+                Swal.fire({
+                  icon: "success",
+                  title: "Successful!",
+                  text: "Sign In successfully!",
+                });
+                navigate(from, { replace: true });
+              }
+            })
+            
           })
         .catch(error=>console.log(error))
        
       });
   };
   console.log(watch("name"));
-
-  const capthcaRef = useRef(null);
-  const [disabled, setDisabled] = useState(true);
 
   const handleValidateCaptcha = () => {
     const user_captcha_value = capthcaRef.current.value;
@@ -62,17 +76,27 @@ const SignUp = () => {
     }
   };
 
-   const { signInWithGoogle } = useContext(AuthContext);
-
    const handleGoogleSignIn = async () => {
      try {
-       await signInWithGoogle();
-       Swal.fire({
-         icon: "success",
-         title: "Successful!",
-         text: "Sign out successfully!",
-       });
-       navigate(from, { replace: true });
+       await signInWithGoogle()
+         .then(result => {
+         const userInfo = {
+           name: result.user?.displayName,
+           email: result.user?.email,
+         };
+
+         axiosPublic.post("/user", userInfo).then((res) => {
+           if (res.data.insertedId) {
+             Swal.fire({
+               icon: "success",
+               title: "Successful!",
+               text: "Sign In successfully!",
+             });
+             navigate(from, { replace: true });
+           }
+         });
+       })
+       
      } catch (error) {
        console.error("Google Sign-In Error", error);
      }

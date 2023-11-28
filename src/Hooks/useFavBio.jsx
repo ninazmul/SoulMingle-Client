@@ -7,14 +7,14 @@ const useFavBio = () => {
 
     const axiosSecure = useAxios();
     const { user } = useAuth();
-    const { data: favBio = [] } = useQuery({
+    const { refetch, data: favBio = [] } = useQuery({
         queryKey: ["favBio", user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/favBio?email=${user.email}`);
             return res.data;
         }
     })
-    return [favBio];
+    return [favBio, refetch];
 };
 
 export default useFavBio;

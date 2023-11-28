@@ -18,8 +18,6 @@ const Biodatas = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 30;
 
-  const onPageChange = (page) => setCurrentPage(page);
-
   const [filteredBioDatas, setFilteredBioDatas] = useState([]);
   const [sortOrder, setSortOrder] = useState("ascending");
 
@@ -45,9 +43,13 @@ const Biodatas = () => {
     setFilteredBioDatas(sortedData);
   }, [bio, filter, sortOrder]);
 
+  const totalPages = Math.ceil(filteredBioDatas.length / itemsPerPage);
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentItems = filteredBioDatas.slice(startIndex, endIndex);
+
+  const onPageChange = (page) => setCurrentPage(page);
 
   const handleFilterChange = (type, value) => {
     if (type === "division" && value === "All") {
@@ -157,7 +159,7 @@ const Biodatas = () => {
         <Pagination
           layout="table"
           currentPage={currentPage}
-          totalPages={Math.ceil(filteredBioDatas.length / itemsPerPage)}
+          totalPages={totalPages}
           onPageChange={onPageChange}
           showIcons
         />

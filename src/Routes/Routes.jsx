@@ -11,6 +11,11 @@ import SignIn from "../Pages/SignIn-Up/SignIn";
 import SignUp from "../Pages/SignIn-Up/SignUp";
 import PrivateRoute from "./PrivateRoute";
 import FavBio from "../Pages/FavBio";
+import EditBio from "../Pages/Home/EditBio";
+import ViewBio from "../Pages/Home/ViewBio";
+import CheckOut from "../Pages/Home/CheckOut";
+
+
 
 const router = createBrowserRouter([
   {
@@ -47,14 +52,6 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/dashboard",
-        element: (
-          <PrivateRoute>
-            <Dashboard></Dashboard>
-          </PrivateRoute>
-        ),
-      },
-      {
         path: "/signIn",
         element: <SignIn></SignIn>,
       },
@@ -62,9 +59,31 @@ const router = createBrowserRouter([
         path: "/signUp",
         element: <SignUp></SignUp>,
       },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <Dashboard></Dashboard>
+      </PrivateRoute>
+    ),
+    children: [
       {
-        path: "/favBio",
-        element: <FavBio></FavBio>
+        path: "/dashboard/editBio",
+        element: <EditBio></EditBio>,
+      },
+      {
+        path: "/dashboard/viewBio",
+        element: <ViewBio></ViewBio>,
+      },
+      {
+        path: "/dashboard/favBio",
+        element: <FavBio></FavBio>,
+      },
+      {
+        path: "/dashboard/checkout",
+        element: <CheckOut></CheckOut>,
       },
     ],
   },
