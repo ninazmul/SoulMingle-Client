@@ -12,7 +12,7 @@ import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
 
 const SignUp = () => {
-  const { createUser } = useContext(AuthContext);
+  const { createUser, updateUserProfile } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -21,6 +21,7 @@ const SignUp = () => {
   const {
     register,
     handleSubmit,
+    reset,
     watch,
     formState: { errors },
   } = useForm();
@@ -28,18 +29,23 @@ const SignUp = () => {
       console.log(data);
       createUser(
         data.email,
-        data.password,
-        data.displayName,
-        data.photoURL
+        data.password
       ).then((result) => {
         const loggedUser = result.user;
         console.log(loggedUser);
-        Swal.fire({
-          icon: "success",
-          title: "Successful!",
-          text: "Sign out successfully!",
-        });
-        navigate(from, { replace: true });
+        updateUserProfile(data.displayName, data.photoURL)
+          .then(() => {
+            console.log('user profile info updated')
+            reset();
+             Swal.fire({
+               icon: "success",
+               title: "Successful!",
+               text: "Sign out successfully!",
+             });
+             navigate(from, { replace: true });
+          })
+        .catch(error=>console.log(error))
+       
       });
   };
   console.log(watch("name"));

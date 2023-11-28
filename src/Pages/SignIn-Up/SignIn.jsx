@@ -38,6 +38,11 @@ const SignIn = () => {
         navigate(from, { replace: true });
       } catch (error) {
         console.error("Sign-in error:", error.code, error.message);
+        Swal.fire({
+          icon: "error",
+          title: "Oops..!",
+          text: "No user found, Sign In failed!",
+        });
       }
     };
 

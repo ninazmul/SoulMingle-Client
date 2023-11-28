@@ -10,6 +10,7 @@ import BioDetails from "../Pages/Home/BioDetails";
 import SignIn from "../Pages/SignIn-Up/SignIn";
 import SignUp from "../Pages/SignIn-Up/SignUp";
 import PrivateRoute from "./PrivateRoute";
+import FavBio from "../Pages/FavBio";
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: "/signUp",
         element: <SignUp></SignUp>,
+      },
+      {
+        path: "/favBio",
+        element: <FavBio></FavBio>
       },
     ],
   },

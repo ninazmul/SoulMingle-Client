@@ -1,12 +1,16 @@
 import { Link } from "react-router-dom";
-import { Avatar, Dropdown, Navbar, Button } from "flowbite-react";
+import { Dropdown, Navbar, Button } from "flowbite-react";
 import { useContext } from "react";
 import { AuthContext } from "../../../providers/AuthProvider";
 import Swal from "sweetalert2";
+import { FaHeart } from "react-icons/fa";
+import useFavBio from "../../../Hooks/useFavBio";
+
 
 const NavBar = () => {
 
   const { user, singOUT } = useContext(AuthContext);
+  const [favBio] = useFavBio();
 
   const handleSignOut = () => {
     singOUT()
@@ -62,26 +66,52 @@ const NavBar = () => {
             Soul<span className="text-pink-500">Mingle</span>
           </span>
         </Navbar.Brand>
-        <div className="flex md:order-2">
+        <div className="flex md:order-2 gap-4 items-center">
+          <button
+            type="button"
+            className="relative inline-flex items-center text-3xl font-medium text-center text-pink-500"
+          >
+            <Link to="/favBio">
+              <FaHeart />
+            </Link>
+
+            <span className="sr-only">Notifications</span>
+            <div className="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">
+              {favBio.length}
+            </div>
+          </button>
+
           <Dropdown
             arrowIcon={false}
             inline
-            label={<img src={user.photoURL} className="rounded-full w-1/3" alt="User settings"/>}
+            label={
+              user ? (
+                <img
+                  src={user.photoURL}
+                  className="rounded-full h-10"
+                  alt="Setting"
+                />
+              ) : null
+            }
           >
-            <Dropdown.Header>
-              <span className="block text-sm">{user.displayName}</span>
-              <span className="block truncate text-sm font-medium">
-                {user.email}
-              </span>
-            </Dropdown.Header>
-            <Dropdown.Item>
-              <Link to="/dashboard">
-                <li className="hover:text-pink-500 focus:text-pink-500">
-                  Dashboard
-                </li>
-              </Link>
-            </Dropdown.Item>
-            <Dropdown.Divider />
+            {user && (
+              <>
+                <Dropdown.Header>
+                  <span className="block text-sm">{user.displayName}</span>
+                  <span className="block truncate text-sm font-medium">
+                    {user.email}
+                  </span>
+                </Dropdown.Header>
+                <Dropdown.Item>
+                  <Link to="/dashboard">
+                    <li className="hover:text-pink-500 focus:text-pink-500">
+                      Dashboard
+                    </li>
+                  </Link>
+                </Dropdown.Item>
+                <Dropdown.Divider />
+              </>
+            )}
             <Dropdown.Item>
               {user ? (
                 <>
