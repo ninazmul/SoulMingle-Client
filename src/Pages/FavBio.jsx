@@ -65,7 +65,7 @@ const FavBio = () => {
                 key={bio._id}
               >
                 <Table.Cell>
-                  <img src={bio.ProfileImage} alt="" className="h-10" />
+                  <img src={bio.ProfileImage} alt="" className="h-10 rounded-full" />
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                   {bio.Name}

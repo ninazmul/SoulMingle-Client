@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Card } from "flowbite-react";
 import useBioData from "../../Hooks/useBioData";
 import useAuth from "../../Hooks/useAuth";
@@ -7,48 +8,54 @@ import Swal from "sweetalert2";
 const EditBio = () => {
   const [bio, reloadBio] = useBioData();
   const { user } = useAuth();
+  const [formData, setFormData] = useState({});
 
   const filteredBioData = bio.filter((data) => data.Email === user.email);
 
-  const handleUpdateBio = (e) => {
+  const handleUpdateBio = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
+    const updateBio = { ...filteredBioData[0], ...formData };
 
-    const updateBio = {};
-    formData.forEach((value, key) => {
-      updateBio[key] = value;
-    });
-
-    fetch(`http://localhost:5000/bioData/${filteredBioData[0]._id}`, {
-      method: "PUT",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(updateBio),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.modifiedCount > 0) {
-          Swal.fire({
-            icon: "success",
-            title: "Bio Updated Successfully!",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-          reloadBio();
+    try {
+      const response = await fetch(
+        `http://localhost:5000/bioData/${filteredBioData[0]._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updateBio),
         }
-      })
-      .catch((error) => {
-        console.error("Error creating bio:", error.message);
+      );
 
+      const data = await response.json();
+
+      if (data.modifiedCount > 0) {
         Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "Failed to create bio. Please try again.",
+          icon: "success",
+          title: "Bio Updated Successfully!",
+          showConfirmButton: false,
+          timer: 1500,
         });
+        reloadBio();
+      }
+    } catch (error) {
+      console.error("Error updating bio:", error.message);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Failed to update bio. Please try again.",
       });
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   return (
@@ -63,12 +70,19 @@ const EditBio = () => {
             <Card className="">
               <div className="flex flex-col lg:flex-row items-center justify-around gap-10">
                 <div className="w-1/3">
-                  <img className="w-96 rounded-lg" src={data.ProfileImage} alt="" />
+                  <img
+                    className="w-96 rounded-lg"
+                    src={data.ProfileImage}
+                    alt=""
+                  />
                 </div>
                 <div className=" w-2/3">
-                  {/* Editable form */}
 
-                  <form className="max-w-md mx-auto" onSubmit={handleUpdateBio}>
+                  <form
+                    className="max-w-md mx-auto"
+                    onSubmit={handleUpdateBio}
+                    onChange={handleChange}
+                  >
                     <div className="grid md:grid-cols-2 md:gap-6">
                       <div className="relative z-0 w-full mb-5 group">
                         <input
@@ -76,12 +90,14 @@ const EditBio = () => {
                           name="Name"
                           id="name"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.Name || "Name"}
+                          
                         />
                         <label
                           alt="Name"
                           htmlFor="name"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+
                         >
                           {data.Name}
                         </label>
@@ -92,7 +108,7 @@ const EditBio = () => {
                           name="Subscription"
                           id="Subscription"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.Subscription || 'Free'}
                           readOnly
                         />
                         <label
@@ -110,14 +126,14 @@ const EditBio = () => {
                         name="ProfileImage"
                         id="ProfileImage"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                        placeholder=" "
+                        defaultValue={data.ProfileImage || "Profile Image"}
                       />
                       <label
                         alt="Profile Image"
                         htmlFor="ProfileImage"
                         className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                       >
-                        {data.ProfileImage.slice(0, 50)}...
+                        Profile Image
                       </label>
                     </div>
                     <div className="grid md:grid-cols-2 md:gap-6">
@@ -128,13 +144,13 @@ const EditBio = () => {
                           name="BiodataType"
                           id="BiodataType"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.BiodataType || "Gender"}
                         />
                         <label
                           htmlFor="BiodataType"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.BiodataType}
+                          Gender
                         </label>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
@@ -143,13 +159,13 @@ const EditBio = () => {
                           name="Age"
                           id="Age"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.Age || "Age"}
                         />
                         <label
                           htmlFor="Age"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.Age}
+                         Age
                         </label>
                       </div>
                     </div>
@@ -161,13 +177,13 @@ const EditBio = () => {
                           name="Height"
                           id="Height"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.Height || "Height"}
                         />
                         <label
                           htmlFor="Height"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.Height} CM
+                          Height In CM
                         </label>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
@@ -176,13 +192,13 @@ const EditBio = () => {
                           name="Weight"
                           id="Weight"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.Weight || "Weight"}
                         />
                         <label
                           htmlFor="Weight"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.Weight} KG
+                         Weight In KG
                         </label>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
@@ -191,15 +207,14 @@ const EditBio = () => {
                           name="Race"
                           id="Race"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
-                          readOnly
+                          defaultValue={data.Race || "Race"}
                         />
                         <label
                           alt="Race"
                           htmlFor="Race"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.Race}
+                          Race
                         </label>
                       </div>
                     </div>
@@ -210,14 +225,14 @@ const EditBio = () => {
                           name="Occupation"
                           id="Occupation"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.Occupation || "Occupation"}
                         />
                         <label
                           alt="Occupation"
                           htmlFor="Occupation"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.Occupation}
+                          Occupation
                         </label>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
@@ -226,14 +241,14 @@ const EditBio = () => {
                           name="DateOfBirth"
                           id="DateOfBirth"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.DateOfBirth || "Date Of Birth"}
                         />
                         <label
                           alt="Date Of Birth"
                           htmlFor="DateOfBirth"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.DateOfBirth}
+                          Date Of Birth
                         </label>
                       </div>
                     </div>
@@ -244,14 +259,14 @@ const EditBio = () => {
                           name="FathersName"
                           id="FathersName"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.FathersName || "Fathers Name"}
                         />
                         <label
                           alt="Fathers Name"
                           htmlFor="FathersName"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.FathersName}
+                          Father Name
                         </label>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
@@ -260,14 +275,14 @@ const EditBio = () => {
                           name="MothersName"
                           id="MothersName"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.MothersName || "Mothers Name"}
                         />
                         <label
                           alt="Mothers Name"
                           htmlFor="MothersName"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.MothersName}
+                         Mohter Name
                         </label>
                       </div>
                     </div>
@@ -278,14 +293,14 @@ const EditBio = () => {
                           name="PermanentDivision"
                           id="PermanentDivision"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.PermanentDivision || "Permanent Division"}
                         />
                         <label
                           alt="Permanent Division"
                           htmlFor="PermanentDivision"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.PermanentDivision}
+                          Permanent Division
                         </label>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
@@ -294,14 +309,14 @@ const EditBio = () => {
                           name="PresentDivision"
                           id="PresentDivision"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.PresentDivision || "Present Division"}
                         />
                         <label
                           alt="Present Division"
                           htmlFor="PresentDivision"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.PresentDivision}
+                          Present Division
                         </label>
                       </div>
                     </div>
@@ -312,14 +327,14 @@ const EditBio = () => {
                           name="Email"
                           id="Email"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.Email || "Email"}
                           readOnly
                         />
                         <label
                           htmlFor="Email"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.Email}
+                          Email
                         </label>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
@@ -328,14 +343,14 @@ const EditBio = () => {
                           name="MobileNumber"
                           id="MobileNumber"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.MobileNumber || "Mobile Number"}
                         />
                         <label
                           alt="Mobile Number"
                           htmlFor="MobileNumber"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          {data.MobileNumber}
+                          Mobile Number
                         </label>
                       </div>
                     </div>
@@ -354,7 +369,7 @@ const EditBio = () => {
                           name="ExpectedPartnerHeight"
                           id="ExpectedPartnerHeight"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.ExpectedPartnerHeight || "Partner Height"}
                         />
                         <label
                           alt="Expected Partner Height"
@@ -370,7 +385,7 @@ const EditBio = () => {
                           name="ExpectedPartnerWeight"
                           id="ExpectedPartnerWeight"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.ExpectedPartnerWeight || "Partner Weight"}
                         />
                         <label
                           alt="Expected Partner Weight in KG"
@@ -386,7 +401,7 @@ const EditBio = () => {
                           name="ExpectedPartnerAge"
                           id="ExpectedPartnerAge"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          placeholder=" "
+                          defaultValue={data.ExpectedPartnerAge || "Partner Age"}
                         />
                         <label
                           alt="Expected Partner Age"
