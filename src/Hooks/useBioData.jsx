@@ -1,21 +1,27 @@
-import { useEffect, useState } from "react";
-
+import { useState, useEffect } from "react";
 
 const useBioData = () => {
-     const [bio, setBio] = useState([]);
-    const [loading, setLoading] = useState(true);
+  const [bio, setBio] = useState([]);
 
-     useEffect(() => {
-       fetch("http://localhost:5000/bioData")
-         .then((res) => res.json())
-         .then((bio) => {
-           setBio(bio);
-           setLoading(false);
-         });
-     }, []);
-    
-    return [bio, loading];
+  const fetchBioData = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/bioData");
+      const data = await response.json();
+      setBio(data);
+    } catch (error) {
+      console.error("Error fetching bio data:", error.message);
+    }
+  };
 
+  useEffect(() => {
+    fetchBioData();
+  }, []); 
+
+  const reloadBio = () => {
+    fetchBioData();
+  };
+
+  return [bio, reloadBio];
 };
 
 export default useBioData;

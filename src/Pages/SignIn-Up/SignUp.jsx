@@ -58,7 +58,7 @@ const SignUp = () => {
                 });
                 navigate(from, { replace: true });
               }
-            })
+            });
             
           })
         .catch(error=>console.log(error))
@@ -95,6 +95,13 @@ const SignUp = () => {
              navigate(from, { replace: true });
            }
          });
+           reset();
+           Swal.fire({
+             icon: "success",
+             title: "Successful!",
+             text: "Sign In successfully!",
+           });
+           navigate(from, { replace: true });
        })
        
      } catch (error) {

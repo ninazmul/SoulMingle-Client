@@ -1,50 +1,54 @@
-import React, { useState } from "react";
-import { Badge, Card, Button } from "flowbite-react";
+import { Card } from "flowbite-react";
 import useBioData from "../../Hooks/useBioData";
 import useAuth from "../../Hooks/useAuth";
 import SectionTitle from "../../Components/SectionTitle/SectionTitle";
+import Swal from "sweetalert2";
 
 const EditBio = () => {
-  const [bio] = useBioData();
+  const [bio, reloadBio] = useBioData();
   const { user } = useAuth();
-  const [editedBioData, setEditedBioData] = useState({});
 
-  // Filter the bio data based on the authenticated user's email
   const filteredBioData = bio.filter((data) => data.Email === user.email);
 
-  // Update function to send edited data to the server
-  const handleUpdate = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/bioData/${filteredBioData[0]._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(editedBioData),
+  const handleUpdateBio = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+
+    const updateBio = {};
+    formData.forEach((value, key) => {
+      updateBio[key] = value;
+    });
+
+    fetch(`http://localhost:5000/bioData/${filteredBioData[0]._id}`, {
+      method: "PUT",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(updateBio),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.modifiedCount > 0) {
+          Swal.fire({
+            icon: "success",
+            title: "Bio Updated Successfully!",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          reloadBio();
         }
-      );
+      })
+      .catch((error) => {
+        console.error("Error creating bio:", error.message);
 
-      if (response.ok) {
-        // Handle successful update (e.g., show a success message)
-        console.log("Bio data updated successfully");
-      } else {
-        // Handle update failure (e.g., show an error message)
-        console.error("Failed to update bio data");
-      }
-    } catch (error) {
-      console.error("Error updating bio data:", error);
-    }
-  };
-
-  // Function to handle form input changes
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setEditedBioData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Failed to create bio. Please try again.",
+        });
+      });
   };
 
   return (
@@ -59,126 +63,337 @@ const EditBio = () => {
             <Card className="">
               <div className="flex flex-col lg:flex-row items-center justify-around gap-10">
                 <div className="w-1/3">
-                  <img className="" src={data.ProfileImage} alt="" />
+                  <img className="w-96 rounded-lg" src={data.ProfileImage} alt="" />
                 </div>
                 <div className=" w-2/3">
                   {/* Editable form */}
 
-                  <form className="max-w-md mx-auto">
+                  <form className="max-w-md mx-auto" onSubmit={handleUpdateBio}>
+                    <div className="grid md:grid-cols-2 md:gap-6">
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="text"
+                          name="Name"
+                          id="name"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          alt="Name"
+                          htmlFor="name"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          {data.Name}
+                        </label>
+                      </div>
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="text"
+                          name="Subscription"
+                          id="Subscription"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                          readOnly
+                        />
+                        <label
+                          alt="Subscription"
+                          htmlFor="Subscription"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          {data.Subscription}
+                        </label>
+                      </div>
+                    </div>
                     <div className="relative z-0 w-full mb-5 group">
                       <input
-                        type="email"
-                        name="floating_email"
-                        id="floating_email"
+                        type="text"
+                        name="ProfileImage"
+                        id="ProfileImage"
                         className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
                         placeholder=" "
-                        required
                       />
                       <label
-                        htmlFor="floating_email"
+                        alt="Profile Image"
+                        htmlFor="ProfileImage"
                         className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                       >
-                        Email address
-                      </label>
-                    </div>
-                    <div className="relative z-0 w-full mb-5 group">
-                      <input
-                        type="password"
-                        name="floating_password"
-                        id="floating_password"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                        placeholder=" "
-                        required
-                      />
-                      <label
-                        htmlFor="floating_password"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                      >
-                        Password
-                      </label>
-                    </div>
-                    <div className="relative z-0 w-full mb-5 group">
-                      <input
-                        type="password"
-                        name="repeat_password"
-                        id="floating_repeat_password"
-                        className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                        placeholder=" "
-                        required
-                      />
-                      <label
-                        htmlFor="floating_repeat_password"
-                        className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                      >
-                        Confirm password
+                        {data.ProfileImage.slice(0, 50)}...
                       </label>
                     </div>
                     <div className="grid md:grid-cols-2 md:gap-6">
                       <div className="relative z-0 w-full mb-5 group">
                         <input
+                          alt="Gender"
                           type="text"
-                          name="floating_first_name"
-                          id="floating_first_name"
+                          name="BiodataType"
+                          id="BiodataType"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
                           placeholder=" "
-                          required
                         />
                         <label
-                          htmlFor="floating_first_name"
+                          htmlFor="BiodataType"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          First name
+                          {data.BiodataType}
+                        </label>
+                      </div>
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="number"
+                          name="Age"
+                          id="Age"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          htmlFor="Age"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          {data.Age}
+                        </label>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-3 md:gap-6">
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          alt="Height"
+                          type="number"
+                          name="Height"
+                          id="Height"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          htmlFor="Height"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          {data.Height} CM
+                        </label>
+                      </div>
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="number"
+                          name="Weight"
+                          id="Weight"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          htmlFor="Weight"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          {data.Weight} KG
                         </label>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
                         <input
                           type="text"
-                          name="floating_last_name"
-                          id="floating_last_name"
+                          name="Race"
+                          id="Race"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
                           placeholder=" "
-                          required
+                          readOnly
                         />
                         <label
-                          htmlFor="floating_last_name"
+                          alt="Race"
+                          htmlFor="Race"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          Last name
+                          {data.Race}
                         </label>
                       </div>
                     </div>
                     <div className="grid md:grid-cols-2 md:gap-6">
                       <div className="relative z-0 w-full mb-5 group">
                         <input
-                          type="tel"
-                          pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-                          name="floating_phone"
-                          id="floating_phone"
+                          type="text"
+                          name="Occupation"
+                          id="Occupation"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
                           placeholder=" "
-                          required
                         />
                         <label
-                          htmlFor="floating_phone"
+                          alt="Occupation"
+                          htmlFor="Occupation"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          Phone number (123-456-7890)
+                          {data.Occupation}
+                        </label>
+                      </div>
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="date"
+                          name="DateOfBirth"
+                          id="DateOfBirth"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          alt="Date Of Birth"
+                          htmlFor="DateOfBirth"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          {data.DateOfBirth}
+                        </label>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 md:gap-6">
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="text"
+                          name="FathersName"
+                          id="FathersName"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          alt="Fathers Name"
+                          htmlFor="FathersName"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          {data.FathersName}
                         </label>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
                         <input
                           type="text"
-                          name="floating_company"
-                          id="floating_company"
+                          name="MothersName"
+                          id="MothersName"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
                           placeholder=" "
-                          required
                         />
                         <label
-                          htmlFor="floating_company"
+                          alt="Mothers Name"
+                          htmlFor="MothersName"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                          Company (Ex. Google)
+                          {data.MothersName}
+                        </label>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 md:gap-6">
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="text"
+                          name="PermanentDivision"
+                          id="PermanentDivision"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          alt="Permanent Division"
+                          htmlFor="PermanentDivision"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          {data.PermanentDivision}
+                        </label>
+                      </div>
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="text"
+                          name="PresentDivision"
+                          id="PresentDivision"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          alt="Present Division"
+                          htmlFor="PresentDivision"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          {data.PresentDivision}
+                        </label>
+                      </div>
+                    </div>
+                    <div className="grid md:grid-cols-2 md:gap-6">
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="email"
+                          name="Email"
+                          id="Email"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                          readOnly
+                        />
+                        <label
+                          htmlFor="Email"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          {data.Email}
+                        </label>
+                      </div>
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="number"
+                          name="MobileNumber"
+                          id="MobileNumber"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          alt="Mobile Number"
+                          htmlFor="MobileNumber"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          {data.MobileNumber}
+                        </label>
+                      </div>
+                    </div>
+                    <p className="text-center">Expected Partner:</p>
+                    <div
+                      style={{
+                        borderBottom: "1px solid #ccc",
+                        margin: "10px 0",
+                      }}
+                    ></div>
+
+                    <div className="grid md:grid-cols-3 md:gap-6">
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="number"
+                          name="ExpectedPartnerHeight"
+                          id="ExpectedPartnerHeight"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          alt="Expected Partner Height"
+                          htmlFor="ExpectedPartnerHeight"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          Height in CM
+                        </label>
+                      </div>
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="number"
+                          name="ExpectedPartnerWeight"
+                          id="ExpectedPartnerWeight"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          alt="Expected Partner Weight in KG"
+                          htmlFor="ExpectedPartnerWeight"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          Weight in KG
+                        </label>
+                      </div>
+                      <div className="relative z-0 w-full mb-5 group">
+                        <input
+                          type="number"
+                          name="ExpectedPartnerAge"
+                          id="ExpectedPartnerAge"
+                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                          placeholder=" "
+                        />
+                        <label
+                          alt="Expected Partner Age"
+                          htmlFor="ExpectedPartnerAge"
+                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                        >
+                          Age
                         </label>
                       </div>
                     </div>

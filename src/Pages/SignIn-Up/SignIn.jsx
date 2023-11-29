@@ -66,6 +66,12 @@ const SignIn = () => {
             navigate(from, { replace: true });
           }
         });
+        Swal.fire({
+          icon: "success",
+          title: "Successful!",
+          text: "Sign In successfully!",
+        });
+        navigate(from, { replace: true });
       });
     } catch (error) {
       console.error("Google Sign-In Error", error);
