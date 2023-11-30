@@ -14,6 +14,9 @@ import FavBio from "../Pages/FavBio";
 import EditBio from "../Pages/Home/EditBio";
 import ViewBio from "../Pages/Home/ViewBio";
 import CheckOut from "../Pages/Home/CheckOut";
+import AdminDash from "../Pages/Home/AdminDash";
+import ManageUser from "../Pages/Home/ManageUser";
+import ApprovedPremium from "../Pages/Home/ApprovedPremium";
 
 
 
@@ -84,6 +87,18 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/checkout",
         element: <CheckOut></CheckOut>,
+      },
+      {
+        path: "/dashboard/adminDash",
+        element: <AdminDash></AdminDash>,
+      },
+      {
+        path: "/dashboard/manageUser",
+        element: <ManageUser></ManageUser>,
+      },
+      {
+        path: "/dashboard/approvePm",
+        element: <ApprovedPremium></ApprovedPremium>
       },
     ],
   },
