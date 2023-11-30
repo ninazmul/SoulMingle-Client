@@ -1,6 +1,7 @@
 import "./Slider.css"
 import { Banner, Button } from "flowbite-react";
 import { HiX } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 const Slider = () => {
     return (
@@ -13,8 +14,8 @@ const Slider = () => {
           <p className="mb-6 text-lg font-normal text-gray-400 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
             Start meeting singles who are ready to commit today.
           </p>
-          <a
-            href="#"
+          <Link
+            to="/signIn"
             className="inline-flex rounded-full items-center justify-center px-5 py-3 text-base font-medium text-center text-white bg-pink-500 hover:bg-pink-600 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900"
           >
             Get Started
@@ -33,7 +34,7 @@ const Slider = () => {
                 d="M1 5h12m0 0L9 1m4 4L9 9"
               />
             </svg>
-          </a>
+          </Link>
         </div>
         <Banner>
           <div className="flex w-[calc(100%-2rem)] justify-between rounded-lg  bg-pink-500 p-4 shadow-sm flex-row lg:max-w-7xl">
@@ -43,7 +44,7 @@ const Slider = () => {
                 className="mb-2 flex items-center border-gray-200 dark:border-gray-600 md:mb-0 md:mr-4 md:border-r md:pr-4"
               >
                 <img
-                  src="/src/assets/SoulMingle-removebg-preview.png"
+                  src="https://i.ibb.co/4dxnZw8/Soul-Mingle-removebg-preview.png"
                   className="mr-3 h-6 sm:h-9"
                   alt="SoulMingle Logo"
                 />
@@ -56,7 +57,12 @@ const Slider = () => {
               </p>
             </div>
             <div className="flex flex-shrink-0 items-center">
-              <Button className="bg-white rounded-full text-pink-500 hover:bg-pink-700 hover:text-white" href="/signUp">Sign up</Button>
+              <Button
+                className="bg-white rounded-full text-pink-500 hover:bg-pink-700 hover:text-white"
+                href="/signUp"
+              >
+                Sign up
+              </Button>
               <Banner.CollapseButton
                 color="gray"
                 className="border-0 bg-transparent text-white"

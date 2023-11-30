@@ -11,7 +11,7 @@ const Footer = () => {
                 className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse"
               >
                 <img
-                  src="https://i.ibb.co/DQ04cYz/Soul-Mingle-removebg-preview.png"
+                  src="https://i.ibb.co/4dxnZw8/Soul-Mingle-removebg-preview.png"
                   className="h-8"
                   alt="SoulMingle Logo"
                 />

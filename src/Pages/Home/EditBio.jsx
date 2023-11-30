@@ -19,7 +19,7 @@ const EditBio = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/bioData/${filteredBioData[0]._id}`,
+        `https://soul-mingle-server.vercel.app/bioData/${filteredBioData[0]._id}`,
         {
           method: "PUT",
           headers: {
@@ -77,7 +77,6 @@ const EditBio = () => {
                   />
                 </div>
                 <div className=" w-2/3">
-
                   <form
                     className="max-w-md mx-auto"
                     onSubmit={handleUpdateBio}
@@ -91,13 +90,11 @@ const EditBio = () => {
                           id="name"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
                           defaultValue={data.Name || "Name"}
-                          
                         />
                         <label
                           alt="Name"
                           htmlFor="name"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-
                         >
                           {data.Name}
                         </label>
@@ -108,7 +105,7 @@ const EditBio = () => {
                           name="Subscription"
                           id="Subscription"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={data.Subscription || 'Free'}
+                          defaultValue={data.Subscription || "Free"}
                           readOnly
                         />
                         <label
@@ -165,7 +162,7 @@ const EditBio = () => {
                           htmlFor="Age"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                         Age
+                          Age
                         </label>
                       </div>
                     </div>
@@ -198,7 +195,7 @@ const EditBio = () => {
                           htmlFor="Weight"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                         Weight In KG
+                          Weight In KG
                         </label>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
@@ -282,7 +279,7 @@ const EditBio = () => {
                           htmlFor="MothersName"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
                         >
-                         Mohter Name
+                          Mohter Name
                         </label>
                       </div>
                     </div>
@@ -293,7 +290,9 @@ const EditBio = () => {
                           name="PermanentDivision"
                           id="PermanentDivision"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={data.PermanentDivision || "Permanent Division"}
+                          defaultValue={
+                            data.PermanentDivision || "Permanent Division"
+                          }
                         />
                         <label
                           alt="Permanent Division"
@@ -309,7 +308,9 @@ const EditBio = () => {
                           name="PresentDivision"
                           id="PresentDivision"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={data.PresentDivision || "Present Division"}
+                          defaultValue={
+                            data.PresentDivision || "Present Division"
+                          }
                         />
                         <label
                           alt="Present Division"
@@ -369,7 +370,9 @@ const EditBio = () => {
                           name="ExpectedPartnerHeight"
                           id="ExpectedPartnerHeight"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={data.ExpectedPartnerHeight || "Partner Height"}
+                          defaultValue={
+                            data.ExpectedPartnerHeight || "Partner Height"
+                          }
                         />
                         <label
                           alt="Expected Partner Height"
@@ -385,7 +388,9 @@ const EditBio = () => {
                           name="ExpectedPartnerWeight"
                           id="ExpectedPartnerWeight"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={data.ExpectedPartnerWeight || "Partner Weight"}
+                          defaultValue={
+                            data.ExpectedPartnerWeight || "Partner Weight"
+                          }
                         />
                         <label
                           alt="Expected Partner Weight in KG"
@@ -401,7 +406,9 @@ const EditBio = () => {
                           name="ExpectedPartnerAge"
                           id="ExpectedPartnerAge"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={data.ExpectedPartnerAge || "Partner Age"}
+                          defaultValue={
+                            data.ExpectedPartnerAge || "Partner Age"
+                          }
                         />
                         <label
                           alt="Expected Partner Age"

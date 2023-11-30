@@ -8,17 +8,15 @@ import Swal from "sweetalert2";
 import useAxios from "../../Hooks/useAxios";
 import useFavBio from "../../Hooks/useFavBio";
 
-
 const BioDetails = () => {
   const { id } = useParams();
   const [bios, setBio] = useState(null);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const axiosSecure = useAxios();
   const [, refetch] = useFavBio();
-
 
   const AddToFav = () => {
     if (user && user.email && bios) {
@@ -56,7 +54,6 @@ const BioDetails = () => {
               text: "Add to favourite Bio successfully!",
             });
             refetch();
-            
           }
         })
         .catch((error) => {
@@ -80,9 +77,9 @@ const BioDetails = () => {
   };
   useEffect(() => {
     console.log("Fetching bio details for ID:", id);
-    setLoading(true); 
+    setLoading(true);
 
-    fetch(`http://localhost:5000/bioData/${id}`)
+    fetch(`https://soul-mingle-server.vercel.app/bioData/${id}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
@@ -98,12 +95,12 @@ const BioDetails = () => {
         setBio(null);
       })
       .finally(() => {
-        setLoading(false); 
+        setLoading(false);
       });
   }, [id]);
 
   if (loading) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   if (!bios) {
