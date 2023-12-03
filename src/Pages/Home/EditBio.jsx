@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Card } from "flowbite-react";
+import { Button, Card } from "flowbite-react";
 import useBioData from "../../Hooks/useBioData";
 import useAuth from "../../Hooks/useAuth";
 import SectionTitle from "../../Components/SectionTitle/SectionTitle";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const EditBio = () => {
   const [bio, reloadBio] = useBioData();
@@ -75,6 +76,13 @@ const EditBio = () => {
                     src={data.ProfileImage}
                     alt=""
                   />
+                  <div>
+                    <Link to="/">
+                      <Button className="bg-pink-500 w-full my-2 uppercase">
+                        Get Premium Subscription
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
                 <div className=" w-2/3">
                   <form
@@ -135,14 +143,16 @@ const EditBio = () => {
                     </div>
                     <div className="grid md:grid-cols-2 md:gap-6">
                       <div className="relative z-0 w-full mb-5 group">
-                        <input
-                          alt="Gender"
-                          type="text"
+                        <select
                           name="BiodataType"
                           id="BiodataType"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={data.BiodataType || "Gender"}
-                        />
+                          value={formData.Gender}
+                          onChange={handleChange}
+                        >
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                        </select>
                         <label
                           htmlFor="BiodataType"
                           className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
@@ -168,44 +178,70 @@ const EditBio = () => {
                     </div>
                     <div className="grid md:grid-cols-3 md:gap-6">
                       <div className="relative z-0 w-full mb-5 group">
-                        <input
-                          alt="Height"
-                          type="number"
-                          name="Height"
-                          id="Height"
-                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={data.Height || "Height"}
-                        />
                         <label
                           htmlFor="Height"
-                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                          className="block text-sm font-medium text-gray-700 dark:text-white"
                         >
                           Height In CM
                         </label>
+                        <select
+                          id="Height"
+                          name="Height"
+                          defaultValue={data.Height || "Height"}
+                          className="block w-full py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600"
+                        >
+                          <option value="Height" disabled>
+                            Select Height
+                          </option>
+                          <option value="150">150 CM</option>
+                          <option value="160">160 CM</option>
+                          <option value="170">170 CM</option>
+                        </select>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
-                        <input
-                          type="number"
-                          name="Weight"
-                          id="Weight"
-                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={data.Weight || "Weight"}
-                        />
                         <label
                           htmlFor="Weight"
-                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                          className="block text-sm font-medium text-gray-700 dark:text-white"
                         >
                           Weight In KG
                         </label>
+                        <select
+                          id="Weight"
+                          name="Weight"
+                          defaultValue={data.Weight || "Weight"}
+                          className="block w-full py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600"
+                        >
+                          <option value="Weight" disabled>
+                            Select Weight
+                          </option>
+                          <option value="50">50 KG</option>
+                          <option value="60">60 KG</option>
+                          <option value="70">70 KG</option>
+                        </select>
                       </div>
+
                       <div className="relative z-0 w-full mb-5 group">
-                        <input
-                          type="text"
+                        <select
                           name="Race"
                           id="Race"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={data.Race || "Race"}
-                        />
+                          value={formData.Gender}
+                          onChange={handleChange}
+                        >
+                          <option value="Asian">Asian</option>
+                          <option value="Caucasian or White">
+                            Caucasian or White
+                          </option>
+                          <option value="African or Black">
+                            African or Black
+                          </option>
+                          <option value="Native American or Indigenous">
+                            Native American or Indigenous
+                          </option>
+                          <option value="Pacific Islander">
+                            Pacific Islander
+                          </option>
+                        </select>
                         <label
                           alt="Race"
                           htmlFor="Race"
@@ -217,13 +253,19 @@ const EditBio = () => {
                     </div>
                     <div className="grid md:grid-cols-2 md:gap-6">
                       <div className="relative z-0 w-full mb-5 group">
-                        <input
-                          type="text"
+                        <select
                           name="Occupation"
                           id="Occupation"
                           className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={data.Occupation || "Occupation"}
-                        />
+                          value={formData.Gender}
+                          onChange={handleChange}
+                        >
+                          <option value="Govt. Job">Govt. Job</option>
+                          <option value="Private Job">Private Job</option>
+                          <option value="Freelancer">Freelancer</option>
+                          <option value="Student">Student</option>
+                          <option value="House Wife">House Wife</option>
+                        </select>
                         <label
                           alt="Occupation"
                           htmlFor="Occupation"
@@ -285,42 +327,62 @@ const EditBio = () => {
                     </div>
                     <div className="grid md:grid-cols-2 md:gap-6">
                       <div className="relative z-0 w-full mb-5 group">
-                        <input
-                          type="text"
-                          name="PermanentDivision"
-                          id="PermanentDivision"
-                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={
-                            data.PermanentDivision || "Permanent Division"
-                          }
-                        />
                         <label
-                          alt="Permanent Division"
                           htmlFor="PermanentDivision"
-                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                          className="block text-sm font-medium text-gray-700 dark:text-white"
                         >
                           Permanent Division
                         </label>
-                      </div>
-                      <div className="relative z-0 w-full mb-5 group">
-                        <input
-                          type="text"
-                          name="PresentDivision"
-                          id="PresentDivision"
-                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
+                        <select
+                          id="PermanentDivision"
+                          name="PermanentDivision"
                           defaultValue={
-                            data.PresentDivision || "Present Division"
+                            data.PermanentDivision || "Permanent Division"
                           }
-                        />
+                          className="block w-full py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600"
+                        >
+                          <option value="" disabled>
+                            Select Permanent Division
+                          </option>
+                          <option value="Dhaka">Dhaka</option>
+                          <option value="Chattagram">Chattagram</option>
+                          <option value="Rangpur">Rangpur</option>
+                          <option value="Barisal">Barisal</option>
+                          <option value="Khulna">Khulna</option>
+                          <option value="Maymansign">Maymansign</option>
+                          <option value="Sylhet">Sylhet</option>
+                        </select>
+                      </div>
+
+                      <div className="relative z-0 w-full mb-5 group">
                         <label
-                          alt="Present Division"
                           htmlFor="PresentDivision"
-                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                          className="block text-sm font-medium text-gray-700 dark:text-white"
                         >
                           Present Division
                         </label>
+                        <select
+                          id="PresentDivision"
+                          name="PresentDivision"
+                          defaultValue={
+                            data.PresentDivision || "Present Division"
+                          }
+                          className="block w-full py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600"
+                        >
+                          <option value="" disabled>
+                            Select Present Division
+                          </option>
+                          <option value="Dhaka">Dhaka</option>
+                          <option value="Chattagram">Chattagram</option>
+                          <option value="Rangpur">Rangpur</option>
+                          <option value="Barisal">Barisal</option>
+                          <option value="Khulna">Khulna</option>
+                          <option value="Maymansign">Maymansign</option>
+                          <option value="Sylhet">Sylhet</option>
+                        </select>
                       </div>
                     </div>
+
                     <div className="grid md:grid-cols-2 md:gap-6">
                       <div className="relative z-0 w-full mb-5 group">
                         <input
@@ -365,41 +427,54 @@ const EditBio = () => {
 
                     <div className="grid md:grid-cols-3 md:gap-6">
                       <div className="relative z-0 w-full mb-5 group">
-                        <input
-                          type="number"
-                          name="ExpectedPartnerHeight"
-                          id="ExpectedPartnerHeight"
-                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={
-                            data.ExpectedPartnerHeight || "Partner Height"
-                          }
-                        />
                         <label
-                          alt="Expected Partner Height"
-                          htmlFor="ExpectedPartnerHeight"
-                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                          htmlFor="Height"
+                          className="block text-sm font-medium text-gray-700 dark:text-white"
                         >
-                          Height in CM
+                          Height In CM
                         </label>
+                        <select
+                          id="ExpectedPartnerHeight"
+                          name="ExpectedPartnerHeight"
+                          defaultValue={
+                            data.ExpectedPartnerHeight ||
+                            "ExpectedPartnerHeight"
+                          }
+                          className="block w-full py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600"
+                        >
+                          <option value="ExpectedPartnerHeight" disabled>
+                            Select Height
+                          </option>
+                          <option value="150">150 CM</option>
+                          <option value="160">160 CM</option>
+                          <option value="170">170 CM</option>
+                        </select>
                       </div>
                       <div className="relative z-0 w-full mb-5 group">
-                        <input
-                          type="number"
-                          name="ExpectedPartnerWeight"
-                          id="ExpectedPartnerWeight"
-                          className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600 peer"
-                          defaultValue={
-                            data.ExpectedPartnerWeight || "Partner Weight"
-                          }
-                        />
                         <label
-                          alt="Expected Partner Weight in KG"
-                          htmlFor="ExpectedPartnerWeight"
-                          className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 rtl:peer-focus:translate-x-1/4 peer-focus:text-pink-600 peer-focus:dark:text-pink-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
+                          htmlFor="Weight"
+                          className="block text-sm font-medium text-gray-700 dark:text-white"
                         >
-                          Weight in KG
+                          Weight In KG
                         </label>
+                        <select
+                          id="ExpectedPartnerWeight"
+                          name="ExpectedPartnerWeight"
+                          defaultValue={
+                            data.ExpectedPartnerWeight ||
+                            "ExpectedPartnerWeight"
+                          }
+                          className="block w-full py-2.5 px-0 text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-pink-500 focus:outline-none focus:ring-0 focus:border-pink-600"
+                        >
+                          <option value="ExpectedPartnerWeight" disabled>
+                            Select Weight
+                          </option>
+                          <option value="50">50 KG</option>
+                          <option value="60">60 KG</option>
+                          <option value="70">70 KG</option>
+                        </select>
                       </div>
+
                       <div className="relative z-0 w-full mb-5 group">
                         <input
                           type="number"

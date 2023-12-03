@@ -87,12 +87,12 @@ const router = createBrowserRouter([
         element: <FavBio></FavBio>,
       },
       {
-        path: "/dashboard/checkout",
+        path: "/dashboard/checkout/:id",
         element: <CheckOut></CheckOut>,
       },
       {
         path: "/dashboard/myContactReq",
-        element: <MyContactReq></MyContactReq>
+        element: <MyContactReq></MyContactReq>,
       },
       {
         path: "/dashboard/adminDash",
@@ -108,7 +108,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard/approveCR",
-        element: <ApprovedContactReq></ApprovedContactReq>
+        element: <ApprovedContactReq></ApprovedContactReq>,
       },
     ],
   },

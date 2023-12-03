@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import SectionTitle from "../../Components/SectionTitle/SectionTitle";
 import { Badge, Button, Card } from "flowbite-react";
 import { CiHeart } from "react-icons/ci";
@@ -197,7 +197,8 @@ const BioDetails = () => {
                       {bios.PermanentDivision}
                     </span>
                   </p>
-                  {bios.Subscription !== "Premium" ? (
+                  {bios.Email === user.email
+                    ?.Subscription === "Premium" ? (
                     <div></div>
                   ) : (
                     <div>
@@ -212,7 +213,6 @@ const BioDetails = () => {
                         </span>
                       </p>
                     </div>
-                    // Provide a default value (e.g., an empty div)
                   )}
                 </div>
               </div>
@@ -223,16 +223,16 @@ const BioDetails = () => {
               <Button onClick={AddToFav} className="bg-pink-500 rounded-lg m-2">
                 <CiHeart className="text-xl" />
               </Button>
-              {bios.Subscription !== "Free" ? (
-                <div></div>
-              ) : (
+              {bios.Email === user.email
+                    ?.Subscription === "Free" ? (
                 <Button
                   onClick={() => setOpenModal(true)}
                   className="bg-pink-500 rounded-lg m-2"
                 >
                   Contact
                 </Button>
-                // Provide a default value (e.g., an empty div)
+              ) : (
+                <div></div>
               )}
               <Modal
                 show={openModal}
@@ -248,13 +248,14 @@ const BioDetails = () => {
                       Are you sure you want to Request for Contact Information?
                     </h3>
                     <div className="flex justify-center gap-4">
-                      <Button
-                        color="failure"
-                        onClick={() => setOpenModal(false)}
-                        href="/dashboard/checkout"
-                      >
-                        {"Yes, I'm sure"}
-                      </Button>
+                      <Link to={`/dashboard/checkout/${id}`}>
+                        <Button
+                          color="failure"
+                          onClick={() => setOpenModal(false)}
+                        >
+                          {"Yes, I'm sure"}
+                        </Button>
+                      </Link>
                       <Button color="gray" onClick={() => setOpenModal(false)}>
                         No, cancel
                       </Button>
