@@ -7,8 +7,16 @@ import useAuth from "../../Hooks/useAuth";
 import Swal from "sweetalert2";
 import useAxios from "../../Hooks/useAxios";
 import useFavBio from "../../Hooks/useFavBio";
+import useBioData from "../../Hooks/useBioData";
+import DataCard from "./Shared/Data/DataCard";
+import { Modal } from "flowbite-react";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const BioDetails = () => {
+
+  const [bio] = useBioData();
+  const [openModal, setOpenModal] = useState(false);
+
   const { id } = useParams();
   const [bios, setBio] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -79,7 +87,7 @@ const BioDetails = () => {
     console.log("Fetching bio details for ID:", id);
     setLoading(true);
 
-    fetch(`https://soul-mingle-server.vercel.app/bioData/${id}`)
+    fetch(`http://localhost:5000/bioData/${id}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
@@ -103,16 +111,23 @@ const BioDetails = () => {
     return <div>Loading...</div>;
   }
 
-  if (!bios) {
-    return <div>User not found</div>;
-  }
+   if (!bios) {
+     return <div>User not found</div>;
+   }
+
+   // Filter more data based on biodata's gender
+   const filteredBioData = bio.filter(
+     (biodata) => biodata.BiodataType === bios.BiodataType
+   );
+
+ 
 
   return (
     <section className="pt-16">
       <SectionTitle subHeading="view" heading="User Details"></SectionTitle>
 
-      <div className="flex flex-col md:flex-row justify-around items-center">
-        <div className="w-2/3 flex items-center">
+      <div className="flex flex-col md:flex-row justify-around items-start">
+        <div className="w-full md:w-2/3 flex items-center overflow-y-auto">
           <Card className="">
             <div className="flex items-center justify-around gap-10">
               <div className="w-1/3">
@@ -182,6 +197,23 @@ const BioDetails = () => {
                       {bios.PermanentDivision}
                     </span>
                   </p>
+                  {bios.Subscription !== "Premium" ? (
+                    <div></div>
+                  ) : (
+                    <div>
+                      <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
+                        Email:{" "}
+                        <span className="text-pink-700">{bios.Email}</span>
+                      </p>
+                      <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
+                        Mobile:{" "}
+                        <span className="text-pink-700">
+                          {bios.MobileNumber}
+                        </span>
+                      </p>
+                    </div>
+                    // Provide a default value (e.g., an empty div)
+                  )}
                 </div>
               </div>
             </div>
@@ -191,35 +223,57 @@ const BioDetails = () => {
               <Button onClick={AddToFav} className="bg-pink-500 rounded-lg m-2">
                 <CiHeart className="text-xl" />
               </Button>
-              <Button className="bg-pink-500 rounded-lg m-2">CheckOut</Button>
-              <Button className="bg-pink-500 rounded-lg m-2">Contact</Button>
+              {bios.Subscription !== "Free" ? (
+                <div></div>
+              ) : (
+                <Button
+                  onClick={() => setOpenModal(true)}
+                  className="bg-pink-500 rounded-lg m-2"
+                >
+                  Contact
+                </Button>
+                // Provide a default value (e.g., an empty div)
+              )}
+              <Modal
+                show={openModal}
+                size="md"
+                onClose={() => setOpenModal(false)}
+                popup
+              >
+                <Modal.Header />
+                <Modal.Body>
+                  <div className="text-center">
+                    <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                    <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                      Are you sure you want to Request for Contact Information?
+                    </h3>
+                    <div className="flex justify-center gap-4">
+                      <Button
+                        color="failure"
+                        onClick={() => setOpenModal(false)}
+                        href="/dashboard/checkout"
+                      >
+                        {"Yes, I'm sure"}
+                      </Button>
+                      <Button color="gray" onClick={() => setOpenModal(false)}>
+                        No, cancel
+                      </Button>
+                    </div>
+                  </div>
+                </Modal.Body>
+              </Modal>
             </Button.Group>
           </div>
         </div>
-        <div className="text-center w-1/3">
+
+        <div className="text-center w-full md:w-1/3 border-l-2 border-pink-600 overflow-y-auto max-h-screen">
           <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Expectation:
+            More BioDatas:
           </h2>
-          <div className="">
-            <p className="text-xl md:text-2xl">
-              Age:{" "}
-              <span className="text-pink-700">{bios.ExpectedPartnerAge}</span>{" "}
-              Years
-            </p>
-            <p className="text-xl md:text-2xl">
-              Height:{" "}
-              <span className="text-pink-700">
-                {bios.ExpectedPartnerHeight}
-              </span>{" "}
-              CM
-            </p>
-            <p className="text-xl md:text-2xl">
-              Weight:{" "}
-              <span className="text-pink-700">
-                {bios.ExpectedPartnerWeight}
-              </span>{" "}
-              KG
-            </p>
+          <div className="grid ">
+            {filteredBioData.map((bio) => (
+              <DataCard key={bio._id} bio={bio}></DataCard>
+            ))}
           </div>
         </div>
       </div>

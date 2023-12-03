@@ -1,6 +1,6 @@
 
 
-const CheckOut = () => {
+const MyContactReq = () => {
     return (
         <div>
             
@@ -8,4 +8,4 @@ const CheckOut = () => {
     );
 };
 
-export default CheckOut;
+export default MyContactReq;

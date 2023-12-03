@@ -56,6 +56,12 @@ const Dashboard = () => {
                       Approved Premium
                     </li>
                   </Link>
+                  <Link to="/dashboard/approveCR">
+                    <li className="flex items-center gap-2 text-white hover:text-pink-500 hover:bg-white px-4 py-2">
+                      <MdWorkspacePremium />
+                      Approved Contact Request
+                    </li>
+                  </Link>
                 </>
               ) : (
                 <>
@@ -78,10 +84,10 @@ const Dashboard = () => {
                       Favourites Biodata
                     </li>
                   </Link>
-                  <Link to="/dashboard/checkout">
+                  <Link to="/dashboard/myContactReq">
                     <li className="flex items-center gap-2 text-white hover:text-pink-500 hover:bg-white px-4 py-2">
                       <IoBagCheckOutline />
-                      Checkout
+                      My Contact Request
                     </li>
                   </Link>
                 </>
@@ -119,7 +125,9 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="flex-1 lg:p-10">
-          <h1 className="text-center text-2xl md:text-4xl font-bold uppercase">Welcome to Dashboard</h1>
+          <h1 className="text-center text-2xl md:text-4xl font-bold uppercase">
+            Welcome to Dashboard
+          </h1>
           <Outlet></Outlet>
         </div>
       </section>

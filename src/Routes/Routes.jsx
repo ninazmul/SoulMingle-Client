@@ -17,6 +17,8 @@ import CheckOut from "../Pages/Home/CheckOut";
 import AdminDash from "../Pages/Home/AdminDash";
 import ManageUser from "../Pages/Home/ManageUser";
 import ApprovedPremium from "../Pages/Home/ApprovedPremium";
+import ApprovedContactReq from "../Pages/Home/ApprovedContactReq";
+import MyContactReq from "../Pages/Home/MyContactReq";
 
 
 
@@ -89,6 +91,10 @@ const router = createBrowserRouter([
         element: <CheckOut></CheckOut>,
       },
       {
+        path: "/dashboard/myContactReq",
+        element: <MyContactReq></MyContactReq>
+      },
+      {
         path: "/dashboard/adminDash",
         element: <AdminDash></AdminDash>,
       },
@@ -98,7 +104,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/dashboard/approvePm",
-        element: <ApprovedPremium></ApprovedPremium>
+        element: <ApprovedPremium></ApprovedPremium>,
+      },
+      {
+        path: "/dashboard/approveCR",
+        element: <ApprovedContactReq></ApprovedContactReq>
       },
     ],
   },

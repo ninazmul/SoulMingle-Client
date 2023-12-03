@@ -5,9 +5,7 @@ const useBioData = () => {
 
   const fetchBioData = async () => {
     try {
-      const response = await fetch(
-        "https://soul-mingle-server.vercel.app/bioData"
-      );
+      const response = await fetch("http://localhost:5000/bioData");
       const data = await response.json();
       setBio(data);
     } catch (error) {
