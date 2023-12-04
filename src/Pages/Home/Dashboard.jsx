@@ -1,7 +1,7 @@
 
 import { Button } from "flowbite-react";
-import { Link, Outlet } from "react-router-dom";
-import { useContext } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
 import { FaEdit } from "react-icons/fa";
@@ -11,13 +11,19 @@ import { IoBagCheckOutline } from "react-icons/io5";
 import { IoHomeSharp } from "react-icons/io5";
 import { MdWorkspacePremium } from "react-icons/md";
 import useAdmin from "../../Hooks/useAdmin";
+import useAxios from "../../Hooks/useAxios";
+import Chart from "react-google-charts";
 
 
 const Dashboard = () => {
 
     const { user, singOUT } = useContext(AuthContext);
     
-    const [isAdmin] = useAdmin();
+  const [isAdmin] = useAdmin();
+  
+  const [chartData, setChartData] = useState([]);
+  const axios = useAxios();
+  const location = useLocation();
 
      const handleSignOut = () => {
        singOUT()
@@ -29,6 +35,56 @@ const Dashboard = () => {
          text: "Sign out successfully!",
        });
      };
+  
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/bioData");
+      const data = response.data;
+
+
+      let totalLength = 0;
+      let maleLength = 0;
+      let femaleLength = 0;
+      let premiumLength = 0;
+
+
+      data.forEach((item) => {
+        totalLength++;
+        if (item.BiodataType === "Male") {
+          maleLength++;
+        } else if (item.BiodataType === "Female") {
+          femaleLength++;
+        }
+
+        if (item.Subscription === "Premium") {
+          premiumLength++;
+        }
+      });
+
+
+      setChartData([
+        ["Category", "Value"],
+        ["Total", totalLength],
+        ["Male", maleLength],
+        ["Female", femaleLength],
+        ["Premium", premiumLength],
+      ]);
+    } catch (error) {
+      console.error("Error fetching pie chart data:", error);
+    }
+  };
+
+  fetchData();
+}, [axios]);
+
+
+   const options = {
+     title: "My Pie Chart",
+     pieHole: 0.4,
+     
+   };
+
     
     return (
       <section className="flex">
@@ -128,6 +184,20 @@ const Dashboard = () => {
           <h1 className="text-center text-2xl md:text-4xl font-bold uppercase">
             Welcome to Dashboard
           </h1>
+          <h1 className="text-center text-pink-500 text-2xl md:text-4xl font-bold uppercase">
+            Statistics
+          </h1>
+          {location.pathname === "/dashboard" && (
+            <div>
+              <Chart
+                chartType="PieChart"
+                width={"100%"}
+                height={"300px"}
+                data={chartData}
+                options={options}
+              />
+            </div>
+          )}
           <Outlet></Outlet>
         </div>
       </section>
