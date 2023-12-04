@@ -13,7 +13,6 @@ import { Modal } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const BioDetails = () => {
-
   const [bio] = useBioData();
   const [openModal, setOpenModal] = useState(false);
 
@@ -87,7 +86,7 @@ const BioDetails = () => {
     console.log("Fetching bio details for ID:", id);
     setLoading(true);
 
-    fetch(`http://localhost:5000/bioData/${id}`)
+    fetch(`https://soul-mingle-server.vercel.app/bioData/${id}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
@@ -111,16 +110,15 @@ const BioDetails = () => {
     return <div>Loading...</div>;
   }
 
-   if (!bios) {
-     return <div>User not found</div>;
-   }
+  if (!bios) {
+    return <div>User not found</div>;
+  }
 
-   // Filter more data based on biodata's gender
-   const filteredBioData = bio.filter(
-     (biodata) => biodata.BiodataType === bios.BiodataType
-   );
+  const filteredBioData = bio.filter(
+    (biodata) => biodata.BiodataType === bios.BiodataType
+  );
 
- 
+  const isPremium = (bios.Email === user.email?.Subscription) === "Premium";
 
   return (
     <section className="pt-16">
@@ -197,10 +195,7 @@ const BioDetails = () => {
                       {bios.PermanentDivision}
                     </span>
                   </p>
-                  {bios.Email === user.email
-                    ?.Subscription === "Premium" ? (
-                    <div></div>
-                  ) : (
+                  {isPremium ? (
                     <div>
                       <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-400">
                         Email:{" "}
@@ -213,6 +208,8 @@ const BioDetails = () => {
                         </span>
                       </p>
                     </div>
+                  ) : (
+                    <div></div>
                   )}
                 </div>
               </div>
@@ -223,16 +220,15 @@ const BioDetails = () => {
               <Button onClick={AddToFav} className="bg-pink-500 rounded-lg m-2">
                 <CiHeart className="text-xl" />
               </Button>
-              {bios.Email === user.email
-                    ?.Subscription === "Free" ? (
+              {isPremium ? (
+                <div></div>
+              ) : (
                 <Button
                   onClick={() => setOpenModal(true)}
                   className="bg-pink-500 rounded-lg m-2"
                 >
                   Contact
                 </Button>
-              ) : (
-                <div></div>
               )}
               <Modal
                 show={openModal}

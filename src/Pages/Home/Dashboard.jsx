@@ -24,6 +24,7 @@ const Dashboard = () => {
   const [chartData, setChartData] = useState([]);
   const axios = useAxios();
   const location = useLocation();
+  const [totalRevenue, setTotalRevenue] = useState(0);
 
      const handleSignOut = () => {
        singOUT()
@@ -36,47 +37,48 @@ const Dashboard = () => {
        });
      };
   
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("/bioData");
-      const data = response.data;
+ useEffect(() => {
+   const fetchData = async () => {
+     try {
+       const response = await axios.get("/bioData");
+       const data = response.data;
 
+       let totalLength = 0;
+       let maleLength = 0;
+       let femaleLength = 0;
+       let premiumLength = 0;
 
-      let totalLength = 0;
-      let maleLength = 0;
-      let femaleLength = 0;
-      let premiumLength = 0;
+       data.forEach((item) => {
+         totalLength++;
+         if (item.BiodataType === "Male") {
+           maleLength++;
+         } else if (item.BiodataType === "Female") {
+           femaleLength++;
+         }
 
+         if (item.Subscription === "Premium") {
+           premiumLength++;
+         }
+       });
 
-      data.forEach((item) => {
-        totalLength++;
-        if (item.BiodataType === "Male") {
-          maleLength++;
-        } else if (item.BiodataType === "Female") {
-          femaleLength++;
-        }
+       const costPerPremiumUser = 500; 
+       const totalRevenue = premiumLength * costPerPremiumUser;
+       setTotalRevenue(totalRevenue);
 
-        if (item.Subscription === "Premium") {
-          premiumLength++;
-        }
-      });
+       setChartData([
+         ["Category", "Value"],
+         ["Total", totalLength],
+         ["Male", maleLength],
+         ["Female", femaleLength],
+         ["Premium", premiumLength],
+       ]);
+     } catch (error) {
+       console.error("Error fetching pie chart data:", error);
+     }
+   };
 
-
-      setChartData([
-        ["Category", "Value"],
-        ["Total", totalLength],
-        ["Male", maleLength],
-        ["Female", femaleLength],
-        ["Premium", premiumLength],
-      ]);
-    } catch (error) {
-      console.error("Error fetching pie chart data:", error);
-    }
-  };
-
-  fetchData();
-}, [axios]);
+   fetchData();
+ }, [axios]);
 
 
    const options = {
@@ -184,19 +186,33 @@ useEffect(() => {
           <h1 className="text-center text-2xl md:text-4xl font-bold uppercase">
             Welcome to Dashboard
           </h1>
-          <h1 className="text-center text-pink-500 text-2xl md:text-4xl font-bold uppercase">
-            Statistics
-          </h1>
-          {location.pathname === "/dashboard" && (
-            <div>
-              <Chart
-                chartType="PieChart"
-                width={"100%"}
-                height={"300px"}
-                data={chartData}
-                options={options}
-              />
-            </div>
+          {isAdmin ? (
+            <>
+              <div>
+                <h1 className="text-center text-pink-500 text-2xl md:text-4xl font-bold uppercase">
+                  Statistics
+                </h1>
+
+                {location.pathname === "/dashboard" && (
+                  <div>
+                    <p className="text-center text-xl md:text-2xl font-bold uppercase">
+                      Total Revenue: <span className="text-pink-500">{totalRevenue}</span> BDT
+                    </p>
+                    <Chart
+                      chartType="PieChart"
+                      width={"100%"}
+                      height={"300px"}
+                      data={chartData}
+                      options={options}
+                    />
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              <div></div>
+            </>
           )}
           <Outlet></Outlet>
         </div>

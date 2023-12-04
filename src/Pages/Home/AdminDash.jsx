@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Table } from "flowbite-react";
 import { MdOutlineDeleteForever } from "react-icons/md";
@@ -10,8 +11,8 @@ import useAxios from "../../Hooks/useAxios";
 const AdminDash = () => {
   const [bio, reloadBio] = useBioData();
   const axiosSecure = useAxios();
+  const [totalRevenue, setTotalRevenue] = useState(0);
 
-  // Calculate biodata counts
   const totalBiodataCount = bio.length;
   const maleBiodataCount = bio.filter((b) => b.BiodataType === "Male").length;
   const femaleBiodataCount = bio.filter(
@@ -35,6 +36,10 @@ const AdminDash = () => {
         axiosSecure.delete(`/bioData/${id}`).then((res) => {
           if (res.data.deletedCount > 0) {
             reloadBio();
+            // Update total revenue after deleting a premium user
+            if (bio.find((b) => b._id === id)?.Subscription === "Premium") {
+              setTotalRevenue((prevTotalRevenue) => prevTotalRevenue - 500);
+            }
             Swal.fire({
               title: "Deleted!",
               text: "Your file has been deleted.",
@@ -45,6 +50,16 @@ const AdminDash = () => {
       }
     });
   };
+
+  const calculateTotalRevenue = () => {
+    const premiumUsers = bio.filter((b) => b.Subscription === "Premium");
+    const revenueFromPremiumUsers = premiumUsers.length * 500;
+    setTotalRevenue(revenueFromPremiumUsers);
+  };
+
+  React.useEffect(() => {
+    calculateTotalRevenue();
+  }, [bio]);
 
   return (
     <section className="overflow-x-auto">
@@ -59,9 +74,7 @@ const AdminDash = () => {
         <h1 className="text-2xl font-bold">
           Premium users: {premiumBiodataCount}
         </h1>
-        <h1 className="text-2xl font-bold">
-          Total Revenue: $0
-        </h1>
+        <h1 className="text-2xl font-bold">Total Revenue: {totalRevenue} BDT</h1>
       </div>
 
       <Table striped>
@@ -87,7 +100,7 @@ const AdminDash = () => {
                 <img
                   src={bio.ProfileImage}
                   alt=""
-                  className="h-10 rounded-full"
+                  className="h-10 w-10 rounded-full"
                 />
               </Table.Cell>
               <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
