@@ -12,7 +12,7 @@ const ApprovedPremium = () => {
     const fetchPremiumUsers = async () => {
       try {
         const response = await axiosSecure.get(
-          "https://soul-mingle-server.vercel.app/premiumSubscription"
+          "http://localhost:5000/premiumSubscription"
         );
         setUsers(response.data);
       } catch (error) {
@@ -28,7 +28,7 @@ const ApprovedPremium = () => {
   const makePremium = async (user) => {
     try {
       const response = await axiosSecure.post(
-        "https://soul-mingle-server.vercel.app/premiumSubscription",
+        "http://localhost:5000/premiumSubscription",
         {
           email: user.email,
         }

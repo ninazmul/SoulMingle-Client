@@ -21,7 +21,7 @@ const EditBio = () => {
 
     try {
       const response = await fetch(
-        `https://soul-mingle-server.vercel.app/bioData/${filteredBioData[0]._id}`,
+        `http://localhost:5000/bioData/${filteredBioData[0]._id}`,
         {
           method: "PUT",
           headers: {

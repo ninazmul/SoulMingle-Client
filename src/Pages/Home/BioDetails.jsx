@@ -86,7 +86,7 @@ const BioDetails = () => {
     console.log("Fetching bio details for ID:", id);
     setLoading(true);
 
-    fetch(`https://soul-mingle-server.vercel.app/bioData/${id}`)
+    fetch(`http://localhost:5000/bioData/${id}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);
@@ -118,7 +118,9 @@ const BioDetails = () => {
     (biodata) => biodata.BiodataType === bios.BiodataType
   );
 
-  const isPremium = (bios.Email === user.email?.Subscription) === "Premium";
+  const isPremium = user?.subscription === "Premium";
+
+
 
   return (
     <section className="pt-16">

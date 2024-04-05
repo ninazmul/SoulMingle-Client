@@ -21,7 +21,7 @@ const ViewBio = () => {
       createBio[key] = value;
     });
 
-    fetch("https://soul-mingle-server.vercel.app/bioData", {
+    fetch("http://localhost:5000/bioData", {
       method: "POST",
       headers: {
         "content-type": "application/json",
