@@ -3,7 +3,7 @@
 const Footer = () => {
     return (
       <div>
-        <footer className="bg-pink-500 rounded-lg shadow m-4">
+        <footer className="bg-pink-500  shadow">
           <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
             <div className="sm:flex sm:items-center sm:justify-between">
               <a
@@ -23,7 +23,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="/about"
-                    className="hover:underline me-4 md:me-6 hover:text-pink-900 focus:text-pink-500"
+                    className="hover:underline me-4 md:me-6 hover:text-pink-900 focus:text-pink-500 md:text-xl"
                   >
                     About
                   </a>
@@ -31,7 +31,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="#"
-                    className="hover:underline me-4 md:me-6 hover:text-pink-900 focus:text-pink-500"
+                    className="hover:underline me-4 md:me-6 hover:text-pink-900 focus:text-pink-500 md:text-xl"
                   >
                     Privacy Policy
                   </a>
@@ -39,7 +39,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="#"
-                    className="hover:underline me-4 md:me-6 hover:text-pink-900 focus:text-pink-500"
+                    className="hover:underline me-4 md:me-6 hover:text-pink-900 focus:text-pink-500 md:text-xl"
                   >
                     Licensing
                   </a>
@@ -47,7 +47,7 @@ const Footer = () => {
                 <li>
                   <a
                     href="/contact"
-                    className="hover:underline hover:text-pink-900 focus:text-pink-500"
+                    className="hover:underline md:text-xl hover:text-pink-900 focus:text-pink-500"
                   >
                     Contact
                   </a>
@@ -56,7 +56,7 @@ const Footer = () => {
             </div>
             <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
             <span className="block text-sm text-white sm:text-center">
-              © 2023{" "}
+              ©{" "}
               <a
                 href="/"
                 className="hover:underline hover:text-pink-900 focus:text-pink-500"

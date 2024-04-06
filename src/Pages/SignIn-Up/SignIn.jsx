@@ -99,8 +99,8 @@ const SignIn = () => {
         <Helmet>
           <title>SoulMingle | Sign In</title>
         </Helmet>
-        <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-20 p-20 ">
-          <div className="w-1/2">
+        <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-20 p-8 md:p-10 lg:p-20 ">
+          <div className="md:w-1/2">
             <form className="flex flex-col gap-4" onSubmit={handleSignIn}>
               <div>
                 <div className="mb-2 block">
@@ -190,7 +190,7 @@ const SignIn = () => {
               </p>
             }
           </div>
-          <div className="w-1/2">
+          <div className="md:w-1/2">
             <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
               Get back to growth with{" "}
               <span className="text-pink-600 dark:text-pink-500">

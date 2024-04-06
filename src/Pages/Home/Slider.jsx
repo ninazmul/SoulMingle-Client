@@ -11,7 +11,7 @@ const Slider = () => {
             Dating for Grown Ups <br />
             Make a Real Connection
           </h1>
-          <p className="mb-6 text-lg font-normal text-gray-400 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">
+          <p className="mb-6 text-lg font-normal text-pink-400 lg:text-xl sm:px-16 xl:px-48 dark:text-pink-400">
             Start meeting singles who are ready to commit today.
           </p>
           <Link
@@ -52,7 +52,7 @@ const Slider = () => {
                   Soul<span className="text-white">Mingle</span>
                 </span>
               </a>
-              <p className="flex items-center text-xl font-normal text-white ">
+              <p className="flex items-center md:text-xl font-normal text-white ">
                 Start your love story
               </p>
             </div>
