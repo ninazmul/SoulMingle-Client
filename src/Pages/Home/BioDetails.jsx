@@ -17,7 +17,7 @@ const BioDetails = () => {
   const [openModal, setOpenModal] = useState(false);
 
   const { id } = useParams();
-  const [bios, setBio] = useState(null);
+  const [bios, setBios] = useState(null); // Corrected variable name
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -25,48 +25,29 @@ const BioDetails = () => {
   const axiosSecure = useAxios();
   const [, refetch] = useFavBio();
 
+  useEffect(() => {
+    setLoading(true);
+    fetch(`http://localhost:5000/bioData/${id}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setBios(data); // Corrected function name
+      })
+      .catch((error) => {
+        console.error("Error fetching bio details:", error);
+        setBios(null); // Corrected function name
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [id]);
+
   const AddToFav = () => {
-    if (user && user.email && bios) {
-      const {
-        _id,
-        Name,
-        BiodataType,
-        ProfileImage,
-        PermanentDivision,
-        Age,
-        Occupation,
-        Subscription,
-      } = bios;
-
-      const favBioCart = {
-        favId: _id,
-        email: user.email,
-        Name,
-        BiodataType,
-        ProfileImage,
-        PermanentDivision,
-        Age,
-        Occupation,
-        Subscription,
-      };
-
-      axiosSecure
-        .post("/favBio", favBioCart)
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.insertedId) {
-            Swal.fire({
-              icon: "success",
-              title: "Successful!",
-              text: "Add to favourite Bio successfully!",
-            });
-            refetch();
-          }
-        })
-        .catch((error) => {
-          console.error("Error adding to favorite Bio:", error);
-        });
-    } else {
+    if (!user || !user.email || !bios) {
       Swal.fire({
         title: "Please sign in first",
         text: "You won't be able to add this!",
@@ -80,31 +61,48 @@ const BioDetails = () => {
           navigate("/signIn", { state: { from: location } });
         }
       });
+      return;
     }
-  };
-  useEffect(() => {
-    console.log("Fetching bio details for ID:", id);
-    setLoading(true);
 
-    fetch(`http://localhost:5000/bioData/${id}`)
+    const {
+      _id,
+      Name,
+      BiodataType,
+      ProfileImage,
+      PermanentDivision,
+      Age,
+      Occupation,
+      Subscription,
+    } = bios;
+
+    const favBioCart = {
+      favId: _id,
+      email: user.email,
+      Name,
+      BiodataType,
+      ProfileImage,
+      PermanentDivision,
+      Age,
+      Occupation,
+      Subscription,
+    };
+
+    axiosSecure
+      .post("/favBio", favBioCart)
       .then((res) => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! Status: ${res.status}`);
+        if (res.data.insertedId) {
+          Swal.fire({
+            icon: "success",
+            title: "Successful!",
+            text: "Add to favourite Bio successfully!",
+          });
+          refetch();
         }
-        return res.json();
-      })
-      .then((data) => {
-        console.log("Bio data:", data);
-        setBio(data);
       })
       .catch((error) => {
-        console.error("Error fetching bio details:", error);
-        setBio(null);
-      })
-      .finally(() => {
-        setLoading(false);
+        console.error("Error adding to favorite Bio:", error);
       });
-  }, [id]);
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -114,13 +112,14 @@ const BioDetails = () => {
     return <div>User not found</div>;
   }
 
+  // Filter bio data based on BiodataType
   const filteredBioData = bio.filter(
     (biodata) => biodata.BiodataType === bios.BiodataType
   );
 
-  const isPremium = user?.subscription === "Premium";
-
-
+  // Check if the user is premium
+  const isPremium =
+    user?.email === bios?.email && bios?.subscription === "Premium";
 
   return (
     <section className="pt-16">
@@ -211,7 +210,7 @@ const BioDetails = () => {
                       </p>
                     </div>
                   ) : (
-                    <div></div>
+                    <div> </div>
                   )}
                 </div>
               </div>
@@ -222,15 +221,17 @@ const BioDetails = () => {
               <Button onClick={AddToFav} className="bg-pink-500 rounded-lg m-2">
                 <CiHeart className="text-xl" />
               </Button>
-              {isPremium ? (
-                <div></div>
+              {!isPremium ? (
+                <div>
+                  <Button
+                    onClick={() => setOpenModal(true)}
+                    className="bg-pink-500 rounded-lg m-2"
+                  >
+                    Contact
+                  </Button>
+                </div>
               ) : (
-                <Button
-                  onClick={() => setOpenModal(true)}
-                  className="bg-pink-500 rounded-lg m-2"
-                >
-                  Contact
-                </Button>
+                <div></div>
               )}
               <Modal
                 show={openModal}
@@ -265,7 +266,7 @@ const BioDetails = () => {
           </div>
         </div>
 
-        <div className="text-center w-full md:w-1/3 border-l-2 border-pink-600 overflow-y-auto max-h-screen">
+        <div className="text-center w-full md:w-1/3 border-l-2 border-pink-600 overflow-y-auto max-h-screen relative">
           <h2 className="text-2xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
             More BioDatas:
           </h2>

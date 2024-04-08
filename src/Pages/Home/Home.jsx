@@ -2,6 +2,7 @@ import Data from "./Shared/Data/Data";
 import Slider from "./Slider";
 import { Helmet } from "react-helmet-async";
 import SuccessCounter from "./SuccessCounter";
+import SuccessStory from "./SuccessStory";
 
 const Home = () => {
     return (
@@ -12,6 +13,7 @@ const Home = () => {
         <Slider></Slider>
         <Data></Data>
         <SuccessCounter></SuccessCounter>
+        <SuccessStory></SuccessStory>
       </div>
     );
 };

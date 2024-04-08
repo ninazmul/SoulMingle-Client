@@ -150,12 +150,12 @@ const Biodatas = () => {
           </Button>
         </div>
       </div>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {currentItems.map((bio) => (
           <DataCard key={bio._id} bio={bio}></DataCard>
         ))}
       </div>
-      <div className="flex overflow-x-auto sm:justify-center">
+      <div className="flex overflow-x-auto justify-center mt-4 text-pink-500">
         <Pagination
           layout="table"
           currentPage={currentPage}

@@ -1,14 +1,17 @@
 
 import SectionTitle from "../../Components/SectionTitle/SectionTitle";
 import useBioData from "../../Hooks/useBioData";
+import useCouples from "../../Hooks/useCouples";
 
 const SuccessCounter = () => {
   const [bio] = useBioData();
+  const [couple] = useCouples();
 
   // Filter data for Male and Female
   const maleData = bio.filter((data) => data.BiodataType === "Male");
     const femaleData = bio.filter((data) => data.BiodataType === "Female");
-    const coupleData = bio.filter((data) => data.BiodataType === "Male" + data.BiodataType === "Female") 
+    const coupleData = couple.filter(
+      (data) => (data._id)); 
 
   // Calculate total counts
   const maleCount = maleData.length;
